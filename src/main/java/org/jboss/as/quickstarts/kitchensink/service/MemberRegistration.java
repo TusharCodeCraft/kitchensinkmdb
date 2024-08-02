@@ -18,14 +18,13 @@ package org.jboss.as.quickstarts.kitchensink.service;
 
 
 
+import org.jboss.as.quickstarts.kitchensink.data.MemberRepository;
 import org.jboss.as.quickstarts.kitchensink.model.Member;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-
-import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 // The @Stateless annotation eliminates the need for manual transaction demarcation
 @Service
@@ -34,8 +33,11 @@ public class MemberRegistration {
 	@Autowired
 	private Logger log;
 
-	@Autowired
-	private EntityManager em;
+	/*
+	 * @Autowired private EntityManager em;
+	 */
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Autowired
     private ApplicationEventPublisher memberEventSrc;
@@ -43,7 +45,7 @@ public class MemberRegistration {
 	@Transactional
 	public void register(Member member) throws Exception {
 		log.info("Registering " + member.getName());
-		em.persist(member);
+		memberRepository.save(member);
 		memberEventSrc.publishEvent(member);
 	}
 }

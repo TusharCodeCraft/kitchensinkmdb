@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -27,6 +28,7 @@ import org.jboss.as.quickstarts.kitchensink.model.Member;
 import org.jboss.as.quickstarts.kitchensink.service.MemberRegistration;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -65,7 +67,7 @@ public class MemberResourceRESTService {
 
     @GetMapping
     public List<Member> listAllMembers() {
-        return repository.findAllOrderedByName();
+        return repository.findAllOrderedByName(Sort.by(Sort.Order.asc("name")));
     }
     
     @GetMapping("/hello")
@@ -73,13 +75,19 @@ public class MemberResourceRESTService {
         return "Hello, " + name + "!";
     }
 
-    @GetMapping("/{id:[0-9][0-9]*}")
-    public ResponseEntity<Member> lookupMemberById(@PathVariable long id) {
-        Member member = repository.findById(id);
-        if (member == null) {
+	/*
+	 * @GetMapping("/{id:[0-9][0-9]*}") public ResponseEntity<Member>
+	 * lookupMemberById(@PathVariable S id) { Member member =
+	 * repository.findById(id); if (member == null) { return
+	 * ResponseEntity.notFound().build(); } return ResponseEntity.ok(member); }
+	 */
+    @GetMapping("/{id}")
+    public ResponseEntity<Member> lookupMemberById(@PathVariable String id) {
+        Optional<Member> memberOpt = repository.findById(id);
+        if (memberOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(member);
+        return ResponseEntity.ok(memberOpt.get());
     }
 
     @PostMapping
@@ -151,13 +159,13 @@ public class MemberResourceRESTService {
      * @param email The email to check
      * @return True if the email already exists, and false otherwise
      */
+	/*
+	 * private boolean emailAlreadyExists(String email) { Member member = null; try
+	 * { member = repository.findByEmail(email); } catch (Exception e) { // ignore }
+	 * return member != null; }
+	 */
     private boolean emailAlreadyExists(String email) {
-        Member member = null;
-        try {
-            member = repository.findByEmail(email);
-        } catch (Exception e) {
-            // ignore
-        }
-        return member != null;
+        // Use Optional to handle the absence of the member
+        return repository.findByEmail(email).isPresent();
     }
 }

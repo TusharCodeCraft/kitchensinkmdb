@@ -26,7 +26,9 @@ import jakarta.inject.Named;
 import java.util.List;
 
 import org.jboss.as.quickstarts.kitchensink.model.Member;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @RequestScoped
@@ -34,7 +36,7 @@ import org.springframework.stereotype.Component;
 @Named
 public class MemberListProducer {
 
-    @Inject
+    @Autowired
     private MemberRepository memberRepository;
 
     private List<Member> members;
@@ -54,6 +56,6 @@ public class MemberListProducer {
 
     @PostConstruct
     public void retrieveAllMembersOrderedByName() {
-        members = memberRepository.findAllOrderedByName();
+        members = memberRepository.findAllOrderedByName(Sort.by(Sort.Order.asc("name")));
     }
 }

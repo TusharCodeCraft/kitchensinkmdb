@@ -22,7 +22,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.jboss.as.quickstarts.kitchensink.data.MemberRepository;
 import org.jboss.as.quickstarts.kitchensink.model.Member;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,10 @@ public class RemoteMemberRegistrationIT {
 
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private MemberRepository memberRepository;
+
 
     protected URI getHTTPEndpoint() {
         try {
@@ -59,7 +65,7 @@ public class RemoteMemberRegistrationIT {
     public void testRegister() throws Exception {
         Member newMember = new Member();
         newMember.setName("Jane Doe");
-        newMember.setEmail("jane@mailinator.com");
+        newMember.setEmail("janedoe@mailinator.com");
         newMember.setPhoneNumber("2125551234");
 
         HttpHeaders headers = new HttpHeaders();
@@ -72,5 +78,12 @@ public class RemoteMemberRegistrationIT {
         assertEquals(200, response.getStatusCodeValue());
         assertNotNull(response.getBody());
     }
+    
+	@AfterEach
+    void tearDown() {
+        // Cleanup test data
+        memberRepository.deleteAll(); // Or specific cleanup operations
+    }
+
 
 }

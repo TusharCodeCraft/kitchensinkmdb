@@ -1,65 +1,42 @@
-/*
- * JBoss, Home of Professional Open Source
- * Copyright 2015, Red Hat, Inc. and/or its affiliates, and individual
- * contributors by the @authors tag. See the copyright.txt in the
- * distribution for a full listing of individual contributors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.jboss.as.quickstarts.kitchensink.data;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.repository.Aggregation;
+import org.jboss.as.quickstarts.kitchensink.model.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.jboss.as.quickstarts.kitchensink.model.Member;
-import org.springframework.stereotype.Component;
+@Repository
+public interface MemberRepository extends MongoRepository<Member, String> {
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
+    // Find a member by their ID
+    Optional<Member> findById(String id);
 
-@ApplicationScoped
-@Entity
-@Component
-public class MemberRepository {
+    // Find all members ordered by their name
+    List<Member> findAll(Sort sort);
 
-    @Inject
-    private EntityManager em;
+    // Find a member by their email
+    Optional<Member> findByEmail(String email);
 
-    public Member findById(Long id) {
-        return em.find(Member.class, id);
-    }
+    // Custom query to find all members ordered by name
+    @Query("{}")
+    List<Member> findAllOrderedByName(Sort sort);
 
-    public Member findByEmail(String email) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Member> criteria = cb.createQuery(Member.class);
-        Root<Member> member = criteria.from(Member.class);
-        // Swap criteria statements if you would like to try out type-safe criteria queries, a new
-        // feature in JPA 2.0
-        // criteria.select(member).where(cb.equal(member.get(Member_.email), email));
-        criteria.select(member).where(cb.equal(member.get("email"), email));
-        return em.createQuery(criteria).getSingleResult();
-    }
+    // Custom method to delete a member by email
+    void deleteByEmail(String email);
 
-    public List<Member> findAllOrderedByName() {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Member> criteria = cb.createQuery(Member.class);
-        Root<Member> member = criteria.from(Member.class);
-        // Swap criteria statements if you would like to try out type-safe criteria queries, a new
-        // feature in JPA 2.0
-        // criteria.select(member).orderBy(cb.asc(member.get(Member_.name)));
-        criteria.select(member).orderBy(cb.asc(member.get("name")));
-        return em.createQuery(criteria).getResultList();
-    }
+    // Optional: Paginate results if needed
+    Page<Member> findAll(Pageable pageable);
+
+    // Optional: Custom query using Aggregation
+    @Aggregation(pipeline = {
+        "{ $sort: { name: 1 } }" // Sort by name in ascending order
+    })
+    List<Member> findAllSortedByName();
 }
+
