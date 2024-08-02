@@ -33,6 +33,13 @@ You can build the project and run the tests by running
 mvn clean package
 ```
 
+
+Browser URL:
+```
+http://localhost:8080/kitchensinkmdb/index.jsf
+```
+
+
 ## Migration approach 
 1. Analyzed the POM file of legacy application to understand the tech stack.
 2. Started spring boot project using [Spring Initializer](https://start.spring.io/)
