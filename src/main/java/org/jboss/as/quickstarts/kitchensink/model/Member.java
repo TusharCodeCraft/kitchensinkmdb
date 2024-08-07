@@ -19,10 +19,9 @@ package org.jboss.as.quickstarts.kitchensink.model;
 import java.io.Serializable;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Email;
@@ -32,7 +31,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 /*@Entity*/
-@JacksonXmlRootElement
+// @JacksonXmlRootElement
 /* @Table(uniqueConstraints = @UniqueConstraint(columnNames = "email")) */
 @Document(collection = "members") // The collection name in MongoDB
 public class Member implements Serializable {
@@ -51,6 +50,7 @@ public class Member implements Serializable {
     @NotNull
     @NotEmpty
     @Email
+    @Indexed(unique = true)
     private String email;
 
     @NotNull

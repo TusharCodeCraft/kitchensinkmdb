@@ -82,7 +82,7 @@ public class RemoteMemberRegistrationIT {
 	@AfterEach
     void tearDown() {
         // Cleanup test data
-        memberRepository.deleteAll(); // Or specific cleanup operations
+        memberRepository.deleteByEmail("janedoe@mailinator.com");
     }
 
 

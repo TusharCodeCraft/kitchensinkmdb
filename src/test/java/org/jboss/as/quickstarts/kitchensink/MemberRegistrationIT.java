@@ -48,6 +48,6 @@ public class MemberRegistrationIT {
     @AfterEach
     void tearDown() {
         // Cleanup test data
-        memberRepository.deleteAll(); // Or specific cleanup operations
+        memberRepository.deleteByEmail("jane@mailinator.com");
     }
 }

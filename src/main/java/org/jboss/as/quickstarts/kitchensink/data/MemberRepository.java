@@ -30,9 +30,6 @@ public interface MemberRepository extends MongoRepository<Member, String> {
     // Custom method to delete a member by email
     void deleteByEmail(String email);
 
-    // Optional: Paginate results if needed
-    Page<Member> findAll(Pageable pageable);
-
     // Optional: Custom query using Aggregation
     @Aggregation(pipeline = {
         "{ $sort: { name: 1 } }" // Sort by name in ascending order

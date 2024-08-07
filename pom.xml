@@ -51,12 +51,12 @@
 			JSF with Spring Boot -->
 		</dependency>
 
-		<!-- H2 Database for in-memory testing -->
+		<!-- H2 Database for in-memory testing 
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
-		</dependency>
+		</dependency>-->
 
 		<!-- Bean Validation Dependencies -->
 		<dependency>
@@ -73,17 +73,6 @@
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator-annotation-processor</artifactId> <!--
 			Annotation processor for validation -->
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-xml</artifactId>
-		</dependency>
-
-		<!-- Tomcat Embedded JSP support -->
-		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-jasper</artifactId> <!-- Provides JSP
-			support in embedded Tomcat -->
 		</dependency>
 
 		<!-- Testing Dependencies -->

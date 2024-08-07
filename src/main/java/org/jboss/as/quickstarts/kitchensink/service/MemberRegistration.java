@@ -23,6 +23,7 @@ import org.jboss.as.quickstarts.kitchensink.model.Member;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +46,12 @@ public class MemberRegistration {
 	@Transactional
 	public void register(Member member) throws Exception {
 		log.info("Registering " + member.getName());
-		memberRepository.save(member);
-		memberEventSrc.publishEvent(member);
+		try {
+			memberRepository.save(member);
+			memberEventSrc.publishEvent(member);
+		} catch (DuplicateKeyException e) {
+			throw new Exception("Email already exists");
+		}
+
 	}
 }

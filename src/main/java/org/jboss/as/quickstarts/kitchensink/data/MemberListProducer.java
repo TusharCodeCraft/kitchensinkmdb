@@ -16,24 +16,19 @@
  */
 package org.jboss.as.quickstarts.kitchensink.data;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.enterprise.event.Observes;
-import jakarta.enterprise.event.Reception;
-import jakarta.enterprise.inject.Produces;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import java.util.List;
 
 import org.jboss.as.quickstarts.kitchensink.model.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Component;
 
-@RequestScoped
+import jakarta.annotation.PostConstruct;
+
+
 @Component
-@Named
 public class MemberListProducer {
 
     @Autowired
@@ -43,8 +38,7 @@ public class MemberListProducer {
 
     // @Named provides access the return value via the EL variable name "members" in the UI (e.g.
     // Facelets or JSP view)
-    @Produces
-    @Named
+    
     public List<Member> getMembers() {
         return members;
     }
@@ -56,6 +50,6 @@ public class MemberListProducer {
 
     @PostConstruct
     public void retrieveAllMembersOrderedByName() {
-        members = memberRepository.findAllOrderedByName(Sort.by(Sort.Order.asc("name")));
+        members = memberRepository.findAll(Sort.by(Order.asc("name")));
     }
 }

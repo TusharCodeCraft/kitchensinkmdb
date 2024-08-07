@@ -30,13 +30,20 @@ Once the application runs you should see something like this
 
 You can build the project and run the tests by running
 ```shell
-mvn clean package
+mvn clean package -DskipTests
 ```
 
 
 Browser URL:
 ```
 http://localhost:8080/kitchensinkmdb/index.jsf
+```
+
+Setup local instance of MongoDB. 
+Update the MongoDB URL in `src/main/resources/application.properties` and `src/test/resources/application.properties` file as per your database configuration.
+
+```
+spring.data.mongodb.uri=mongodb://localhost:27017/kitchensink-db
 ```
 
 
